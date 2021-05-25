@@ -106,7 +106,9 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import BScroll from '@better-scroll/core'
+import PullUp from '@better-scroll/pull-up'
+BScroll.use(PullUp)
 export default {
   name: "Category",
   data () {
@@ -125,8 +127,18 @@ export default {
     // this.scroll = new BScroll(this.$refs.aaa, {
 
     // })
-    new BScroll('.wrapper', {
-
+    const bscroll = new BScroll('.wrapper', {
+      probeType: 3,
+      pullUpLoad: true
+    })
+    bscroll.on('scroll', position => {
+      //   console.log(position);
+    })
+    bscroll.on('pullingUp', () => {
+      console.log('上拉加载更多');
+      setTimeout(() => {
+        scroll.finishPullUp()
+      }, 2000)
     })
   }
 }
