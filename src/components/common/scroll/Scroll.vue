@@ -17,6 +17,7 @@ export default {
       scroll: null
     }
   },
+
   props: {
     probeType: {
       type: Number,
@@ -32,8 +33,8 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad,
-      click: true
-      //   observeDom: true
+      click: true,
+      observeDom: true
     })
 
     this.scroll.on('scroll', position => {
