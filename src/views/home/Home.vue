@@ -23,10 +23,9 @@ import NavBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/tabControl/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMultidata, getHomeGoods } from 'network/home'
-import { debounce } from 'common/utils'
+import { itemListenerMixin, backTopMixin } from 'common/mixin'
 
 import HomeSwiper from './childComps/HomeSwiper'
 import RecommendView from './childComps/RecommendView'
@@ -43,9 +42,9 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
-    Scroll,
-    BackTop
+    Scroll
   },
+  mixins: [itemListenerMixin, backTopMixin],
   data () {
     return {
       banners: [],
@@ -56,7 +55,6 @@ export default {
         'sell': { page: 0, list: [] }
       },
       currentType: 'pop',
-      isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0
@@ -73,18 +71,14 @@ export default {
     // console.log('home destroyed');
   },
   activated () {
-    this.$refs.scroll.scrollTo(0, this.saveY, 0)
+    this.$refs.scroll.scrollTo(0, this.saveY)
     this.$refs.scroll.refresh()
   },
   deactivated () {
     this.saveY = this.$refs.scroll.getScrollY()
   },
   mounted () {
-    const refresh = debounce(this.$refs.scroll.refresh, 300)
-    this.$bus.$on('itemImageLoad', () => {
-      refresh()
-    })
-    // console.log(this.$refs.tabControl2.$el.offsetTop);
+
   },
   methods: {
 
@@ -103,9 +97,7 @@ export default {
       this.$refs.tabControl1.currentIndex = index
       this.$refs.tabControl2.currentIndex = index
     },
-    backClick () {
-      this.$refs.scroll.scrollTo(0, 0)
-    },
+
     contentScroll (position) {
       this.isShowBackTop = (-position.y) > 1000
       this.isTabFixed = (-position.y) > this.tabOffsetTop
